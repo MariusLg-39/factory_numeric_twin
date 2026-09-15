@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "3iwJXE41HQU=",
+  "success": true,
+  "projectFilePath": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/ProjetFullstack.csproj",
+  "expectedPackageFiles": [
+    "/home/marius/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.19/microsoft.aspnetcore.app.ref.9.0.19.nupkg.sha512"
+  ],
+  "logs": []
+}
