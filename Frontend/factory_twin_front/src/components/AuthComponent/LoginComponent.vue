@@ -5,9 +5,12 @@ import { useRouter } from 'vue-router'
 import { useAuth } from './useAuth'
 
 const router = useRouter()
-const { login } = useAuth()
 
-const username = ref('')
+const {
+  login
+} = useAuth()
+
+const email = ref('')
 const password = ref('')
 
 const loading = ref(false)
@@ -16,8 +19,10 @@ const error = ref('')
 async function handleLogin() {
   error.value = ''
 
-  if (!username.value || !password.value) {
-    error.value = 'Veuillez renseigner votre identifiant et votre mot de passe.'
+  if (!email.value || !password.value) {
+    error.value =
+      'Veuillez renseigner votre adresse e-mail et votre mot de passe.'
+
     return
   }
 
@@ -25,7 +30,7 @@ async function handleLogin() {
 
   try {
     await login(
-      username.value,
+      email.value,
       password.value
     )
 
@@ -68,17 +73,17 @@ async function handleLogin() {
           </PrimeMessage>
 
           <div class="form-field">
-            <label for="username">
-              Identifiant
+            <label for="email">
+              Adresse e-mail
             </label>
 
             <PrimeInputText
-              id="username"
-              v-model="username"
-              name="username"
-              type="text"
+              id="email"
+              v-model="email"
+              name="email"
+              type="email"
               autocomplete="username"
-              placeholder="Votre identifiant"
+              placeholder="Votre adresse e-mail"
               class="full-width"
               :disabled="loading"
             />
@@ -117,4 +122,4 @@ async function handleLogin() {
   </main>
 </template>
 
-<style scoped src="./LoginComponent.css"/>
+<style scoped src="./LoginComponent.css" />

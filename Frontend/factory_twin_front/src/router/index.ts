@@ -6,6 +6,7 @@ import {
 import LoginComponent from '../components/AuthComponent/LoginComponent.vue'
 
 import { useAuth } from '../components/AuthComponent/useAuth'
+import HomePageComponent from '@/components/HomePageComponent/HomePageComponent.vue'
 
 const router = createRouter({
   history: createWebHistory(
@@ -26,7 +27,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: LoginComponent,
+      component: HomePageComponent,
 
       meta: {
         requiresAuth: true

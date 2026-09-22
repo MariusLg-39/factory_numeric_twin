@@ -1,0 +1,25 @@
+.home-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem;
+}
+
+.home-card {
+  width: 100%;
+  max-width: 600px;
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.home-content p {
+  margin: 0;
+  font-size: 1.1rem;
+}
