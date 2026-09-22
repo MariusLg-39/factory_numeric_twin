@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("dd759aa2-4b5e-4eeb-889d-25d7b27de51d")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProjetFullstack")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+11ebea74655b6d39764284536fe235ace4fc35f1")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProjetFullstack")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProjetFullstack")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

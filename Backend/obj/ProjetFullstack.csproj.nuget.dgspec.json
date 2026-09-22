@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/ProjetFullstack.csproj": {}
+    "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/ProjetFullstack.csproj": {}
   },
   "projects": {
-    "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/ProjetFullstack.csproj": {
+    "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/ProjetFullstack.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/ProjetFullstack.csproj",
+        "projectUniqueName": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/ProjetFullstack.csproj",
         "projectName": "ProjetFullstack",
-        "projectPath": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/ProjetFullstack.csproj",
+        "projectPath": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/ProjetFullstack.csproj",
         "packagesPath": "/home/marius/.nuget/packages/",
-        "outputPath": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/obj/",
+        "outputPath": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/marius/.nuget/NuGet/NuGet.Config"
@@ -38,11 +38,39 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.22.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -57,7 +85,15 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[9.0.19, 9.0.19]"
+              "version": "[9.0.20, 9.0.20]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[9.0.20, 9.0.20]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.20, 9.0.20]"
             }
           ],
           "frameworkReferences": {
@@ -68,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.120/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.112/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

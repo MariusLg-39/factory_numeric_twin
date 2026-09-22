@@ -1,12 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "Jn+jOi9c/wl/tDpKGkt0Nmz2g30wmDrsKY/PQS15sBk=",
-  "Source": "ProjetFullstack",
-  "BasePath": "_content/ProjetFullstack",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
-}
+{"Version":1,"Hash":"s7UuQdGlr7BOkRrXo1KRESTjJ/QZylBcWmRGpZCFRi8=","Source":"ProjetFullstack","BasePath":"/","Mode":"Root","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
