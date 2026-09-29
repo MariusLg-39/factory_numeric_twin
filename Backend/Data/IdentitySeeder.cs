@@ -8,7 +8,7 @@ public static class IdentitySeeder
     public static async Task SeedAsync(IServiceProvider services)
     {
         var roleManager =
-            services.GetRequiredService<RoleManager<IdentityRole>>();
+            services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
         var userManager =
             services.GetRequiredService<UserManager<ApplicationUser>>();
@@ -28,7 +28,10 @@ public static class IdentitySeeder
             if (!await roleManager.RoleExistsAsync(role))
             {
                 var result = await roleManager.CreateAsync(
-                    new IdentityRole(role)
+                    new IdentityRole<Guid>
+                    {
+                        Name = role
+                    }
                 );
 
                 if (!result.Succeeded)
@@ -65,7 +68,8 @@ public static class IdentitySeeder
 
                 EmailConfirmed = true,
                 IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
             var result = await userManager.CreateAsync(
