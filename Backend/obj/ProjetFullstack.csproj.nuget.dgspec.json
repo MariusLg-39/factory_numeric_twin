@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/ProjetFullstack.csproj": {}
+    "C:\\Users\\aisu\\Documents\\GitHub\\factory_numeric_twin\\Backend\\ProjetFullstack.csproj": {}
   },
   "projects": {
-    "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/ProjetFullstack.csproj": {
+    "C:\\Users\\aisu\\Documents\\GitHub\\factory_numeric_twin\\Backend\\ProjetFullstack.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/ProjetFullstack.csproj",
+        "projectUniqueName": "C:\\Users\\aisu\\Documents\\GitHub\\factory_numeric_twin\\Backend\\ProjetFullstack.csproj",
         "projectName": "ProjetFullstack",
-        "projectPath": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/ProjetFullstack.csproj",
-        "packagesPath": "/home/marius/.nuget/packages/",
-        "outputPath": "/home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/obj/",
+        "projectPath": "C:\\Users\\aisu\\Documents\\GitHub\\factory_numeric_twin\\Backend\\ProjetFullstack.csproj",
+        "packagesPath": "C:\\Users\\aisu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aisu\\Documents\\GitHub\\factory_numeric_twin\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/marius/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\aisu\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -24,6 +24,7 @@
         },
         "frameworks": {
           "net9.0": {
+            "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {}
           }
@@ -38,10 +39,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net9.0": {
+          "framework": "net9.0",
           "targetAlias": "net9.0",
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
@@ -88,7 +90,15 @@
               "version": "[9.0.20, 9.0.20]"
             },
             {
-              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[9.0.20, 9.0.20]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.20, 9.0.20]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
               "version": "[9.0.20, 9.0.20]"
             }
           ],
@@ -100,7 +110,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.112/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
