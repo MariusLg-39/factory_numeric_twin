@@ -1,0 +1,134 @@
+.production-line-page {
+  min-height: calc(100vh - 80px);
+
+  padding: 2.5rem;
+
+  background:
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(59, 130, 246, 0.08),
+      transparent 30%
+    ),
+    #f8fafc;
+}
+
+/* Header */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 2rem;
+}
+
+.page-label {
+  display: block;
+
+  margin-bottom: 0.5rem;
+
+  color: #2563eb;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin: 0.5rem 0 0;
+
+  color: #64748b;
+}
+
+/* Card */
+
+.production-line-card {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+
+  background: #ffffff !important;
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.05) !important;
+}
+
+.production-line-card :deep(.p-card-body) {
+  background: #ffffff !important;
+}
+
+/* Formulaire */
+
+.production-line-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  padding-top: 0.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field label {
+  color: #334155;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-field-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.form-field-checkbox label {
+  color: #334155;
+
+  font-size: 0.9rem;
+}
+
+/* Dialog */
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 0.75rem;
+
+  margin-top: 0.5rem;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .production-line-page {
+    padding: 1.5rem;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.6rem;
+  }
+}

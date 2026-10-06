@@ -1,25 +1,214 @@
-.home-page {
-  min-height: 100vh;
+/* ========================================
+   DASHBOARD
+======================================== */
+
+.dashboard {
+  padding: 2.5rem;
+}
+
+.welcome-section {
+  margin-bottom: 2rem;
+}
+
+.welcome-label {
+  display: inline-block;
+
+  margin-bottom: 0.5rem;
+
+  color: #2563eb;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.welcome-section h2 {
+  margin: 0;
+
+  font-size: 2rem;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+.welcome-section p {
+  margin: 0.5rem 0 0;
+
+  color: #64748b;
+}
+
+/* ========================================
+   STATS
+======================================== */
+
+.stats-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 1.25rem;
+
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  border: 1px solid #e2e8f0 !important;
+
+  border-radius: 14px !important;
+
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.04) !important;
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 2rem;
+  border-radius: 12px;
+
+  font-size: 1.2rem;
 }
 
-.home-card {
-  width: 100%;
-  max-width: 600px;
+.stat-icon.lines {
+  background: #eff6ff;
+  color: #2563eb;
 }
 
-.home-content {
+.stat-icon.products {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.stat-icon.machines {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.stat-icon.users {
+  background: #faf5ff;
+  color: #9333ea;
+}
+
+.stat-label {
+  display: block;
+
+  margin-bottom: 0.25rem;
+
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.stat-value {
+  display: block;
+
+  font-size: 1.5rem;
+
+  color: #0f172a;
+}
+
+/* ========================================
+   CONTENT CARD
+======================================== */
+
+.content-card {
+  min-height: 350px;
+
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.05) !important;
+}
+
+.empty-state {
+  min-height: 220px;
+
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
 }
 
-.home-content p {
+.empty-icon {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 1rem;
+
+  border-radius: 16px;
+
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-size: 1.5rem;
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem;
+
+  color: #334155;
+}
+
+.empty-state p {
   margin: 0;
-  font-size: 1.1rem;
+
+  color: #94a3b8;
+}
+
+/* ========================================
+   CARD OVERRIDES
+======================================== */
+
+.stat-card,
+.content-card {
+  background: #ffffff !important;
+  color: #1e293b !important;
+}
+
+.stat-card :deep(.p-card-body),
+.content-card :deep(.p-card-body) {
+  background: #ffffff !important;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 1100px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-section h2 {
+    font-size: 1.6rem;
+  }
 }
