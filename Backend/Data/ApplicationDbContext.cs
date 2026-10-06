@@ -77,5 +77,197 @@ public class ApplicationDbContext
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        // ============================================================
+        // PRODUCTION LINE
+        // ============================================================
+
+        builder.Entity<ProductionLine>(entity =>
+        {
+            // Primary Key
+            entity.HasKey(x => x.Id);
+
+            // Name
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            // Description
+            entity.Property(x => x.Description)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            // Status
+            entity.Property(x => x.Status)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            // CreatedAt
+            entity.Property(x => x.CreatedAt)
+                .IsRequired();
+
+            // UpdatedAt
+            entity.Property(x => x.UpdatedAt)
+                .IsRequired();
+        });
+
+        // ============================================================
+        // PRODUCT
+        // ============================================================
+
+        builder.Entity<Product>(entity =>
+        {
+            // Primary Key
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            // Foreign Key vers ProductionLine.Id
+            entity.Property(x => x.ProductionLineId)
+                .IsRequired();
+
+            // Relation :
+            // ProductionLine 1 ---- 0..* Product
+            entity.HasOne(p => p.ProductionLine)
+                .WithMany(pl => pl.Products)
+                .HasForeignKey(p => p.ProductionLineId);
+        });
+
+        // ============================================================
+        // MACHINE
+        // ============================================================
+
+        builder.Entity<Machine>(entity =>
+        {
+            // Primary Key
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+                
+            entity.Property(x => x.Type)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Status)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(x => x.CreatedAt)
+                .IsRequired();
+
+            entity.Property(x => x.UpdatedAt)
+                .IsRequired();
+
+            // Foreign Key vers ProductionLine.Id
+            entity.Property(x => x.ProductionLineId)
+                .IsRequired();
+
+            // Relation :
+            // ProductionLine 1 ---- 0..* Machine
+            entity.HasOne(m => m.ProductionLine)
+                .WithMany(pl => pl.Machines)
+                .HasForeignKey(m => m.ProductionLineId);
+        });
+
+        // ============================================================
+        // MACHINE CONFIGURATION
+        // ============================================================
+
+        builder.Entity<MachineConfiguration>(entity =>
+        {
+            // Primary Key
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Value)
+                .IsRequired();
+
+            entity.Property(x => x.Unit)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(x => x.MinValue)
+                .IsRequired();
+
+            entity.Property(x => x.MaxValue)
+                .IsRequired();
+
+            entity.Property(x => x.CreatedAt)
+                .IsRequired();
+
+            entity.Property(x => x.UpdatedAt)
+                .IsRequired();
+
+            // Foreign Key vers Machine.Id
+            entity.Property(x => x.MachineId)
+                .IsRequired();
+
+            // Relation :
+            // Machine 1 ---- 0..* MachineConfiguration
+            entity.HasOne(mc => mc.Machine)
+                .WithMany(m => m.MachineConfigurations)
+                .HasForeignKey(mc => mc.MachineId);
+        });
+
+        // ============================================================
+        // SENSOR
+        // ============================================================
+
+        builder.Entity<Sensor>(entity =>
+        {
+            // Primary Key
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Type)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            // Foreign Key vers Machine.Id
+            entity.Property(x => x.MachineId)
+                .IsRequired();
+
+            // Relation :
+            // Machine 1 ---- 0..* Sensor
+            entity.HasOne(s => s.Machine)
+                .WithMany(m => m.Sensors)
+                .HasForeignKey(s => s.MachineId);
+        });
+
+        // ============================================================
+        // MEASURE
+        // ============================================================
+
+        builder.Entity<Measure>(entity =>
+        {
+            // Primary Key
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Value)
+                .IsRequired();
+
+            entity.Property(x => x.Unit)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(x => x.CreatedAt)
+                .IsRequired();
+
+            // Foreign Key vers Sensor.Id
+            entity.Property(x => x.SensorId)
+                .IsRequired();
+
+            // Relation :
+            // Sensor 1 ---- 0..* Measure
+            entity.HasOne(m => m.Sensor)
+                .WithMany(s => s.Measures)
+                .HasForeignKey(m => m.SensorId);
+        });
     }
 }
