@@ -7,6 +7,7 @@ public class Machine
     public string Type { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public List<MachineConfiguration> MachineConfigurations { get; set; } = new List<MachineConfiguration>();
+    public List<MachineLog> MachineLogs { get; set; } = new List<MachineLog>();
     public List<Sensor> Sensors { get; set; } = new List<Sensor>();
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }

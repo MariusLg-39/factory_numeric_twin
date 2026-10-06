@@ -174,6 +174,37 @@ public class ApplicationDbContext
         });
 
         // ============================================================
+        // MACHINE LOG
+        // ============================================================
+
+        builder.Entity<MachineLog>(entity =>
+        {
+            // Primary Key
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Message)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            entity.Property(x => x.Type)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.CreatedAt)
+                .IsRequired();
+
+            // Foreign Key vers Machine.Id
+            entity.Property(x => x.MachineId)
+                .IsRequired();
+
+            // Relation :
+            // Machine 1 ---- 0..* MachineLog
+            entity.HasOne(ml => ml.Machine)
+                .WithMany(m => m.MachineLogs)
+                .HasForeignKey(ml => ml.MachineId);
+        });
+
+        // ============================================================
         // MACHINE CONFIGURATION
         // ============================================================
 
