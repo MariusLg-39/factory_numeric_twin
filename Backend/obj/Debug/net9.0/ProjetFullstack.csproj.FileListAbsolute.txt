@@ -132,6 +132,7 @@
 /home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/obj/Debug/net9.0/ProjetFullstack.pdb
 /home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/obj/Debug/net9.0/ProjetFullstack.genruntimeconfig.cache
 /home/marius/Documents/Projets/Projet_Fullstack/ProjetFullstack/Backend/obj/Debug/net9.0/ref/ProjetFullstack.dll
+<<<<<<< HEAD
 C:\Users\aisu\Documents\GitHub\factory_numeric_twin\Backend\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\aisu\Documents\GitHub\factory_numeric_twin\Backend\bin\Debug\net9.0\appsettings.json
 C:\Users\aisu\Documents\GitHub\factory_numeric_twin\Backend\bin\Debug\net9.0\net9.0\appsettings.Development.json
@@ -404,3 +405,5 @@ C:\Users\degirmen5u\Documents\GitHub\factory_numeric_twin\Backend\bin\Debug\net9
 C:\Users\degirmen5u\Documents\GitHub\factory_numeric_twin\Backend\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\degirmen5u\Documents\GitHub\factory_numeric_twin\Backend\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\degirmen5u\Documents\GitHub\factory_numeric_twin\Backend\obj\Debug\net9.0\ProjetFullstack.MvcApplicationPartsAssemblyInfo.cs
+=======
+>>>>>>> 5071dc4 (ajout des rôle d'utilisateur, gestion des token, refresh token,)

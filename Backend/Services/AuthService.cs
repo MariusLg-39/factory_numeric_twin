@@ -30,40 +30,38 @@ public AuthService(
     _jwtService = jwtService;
 }
 
-public async Task<AuthResponse> RegisterAsync(
-    RegisterRequest request)
-{
-    var existingUser = await _userManager
-        .FindByEmailAsync(request.Email);
-
-    if (existingUser is not null)
+    public async Task<UserInfo> RegisterAsync(RegisterRequest request)
     {
-        throw new InvalidOperationException("Unable to create the account.");
-    }
+        var existingUser = await _userManager.FindByEmailAsync(request.Email);
 
-    var user = new ApplicationUser
-    {
-        UserName = request.Email,
-        Email = request.Email,
-        FirstName = request.FirstName,
-        LastName = request.LastName
-    };
+        if (existingUser is not null)
+            throw new InvalidOperationException("Unable to create the account.");
 
-    var result = await _userManager
-        .CreateAsync(user, request.Password);
+        var user = new ApplicationUser
+        {
+            UserName = request.Email,
+            Email = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName
+        };
 
-    if (!result.Succeeded)
-    {
-        var errors = string.Join(
-            ", ",
-            result.Errors.Select(x => x.Description));
+        var result = await _userManager.CreateAsync(user, request.Password);
 
-        throw new InvalidOperationException(errors);
-    }
+        if (!result.Succeeded)
+        {
+            var errors = string.Join(", ", result.Errors.Select(x => x.Description));
+            throw new InvalidOperationException(errors);
+        }
 
-    await _userManager.AddToRoleAsync(user, "User");
+        var roleResult = await _userManager.AddToRoleAsync(user, "User");
 
-    return await CreateAuthResponseAsync(user);
+        if (!roleResult.Succeeded)
+        {
+            await _userManager.DeleteAsync(user);
+            throw new InvalidOperationException("Unable to assign the user role.");
+        }
+
+        return await MapUser(user);
 }
 
 public async Task<AuthResponse> LoginAsync(
@@ -135,11 +133,7 @@ public async Task<AuthResponse> RefreshTokenAsync(
     oldToken.ReplacedByTokenHash =
         newRefreshTokenHash;
 
-    await _refreshTokenRepository
-        .UpdateAsync(oldToken);
-
-    await _refreshTokenRepository
-        .AddAsync(newToken);
+    await _refreshTokenRepository.ReplaceAsync(oldToken, newToken);
 
     var (accessToken, accessTokenExpiresAt) =
         await _jwtService
@@ -157,12 +151,13 @@ public async Task<AuthResponse> RefreshTokenAsync(
         RefreshTokenExpiresAt =
             newToken.ExpiresAt,
 
-        User = MapUser(oldToken.User)
+        User = await MapUser(oldToken.User)
     };
 }
 
 public async Task RevokeRefreshTokenAsync(
-    string refreshToken)
+    string refreshToken,
+    Guid userId)
 {
     var tokenHash = HashToken(refreshToken);
 
@@ -171,6 +166,7 @@ public async Task RevokeRefreshTokenAsync(
             .GetByHashAsync(tokenHash);
 
     if (storedToken is null ||
+        storedToken.UserId != userId ||
         !storedToken.IsActive)
     {
         return;
@@ -223,7 +219,7 @@ private async Task<AuthResponse>
         RefreshTokenExpiresAt =
             refreshTokenEntity.ExpiresAt,
 
-        User = MapUser(user)
+        User = await MapUser(user)
     };
 }
 
@@ -243,18 +239,17 @@ private static string HashToken(string token)
     return Convert.ToHexString(bytes);
 }
 
-private static UserInfo MapUser(
-    ApplicationUser user)
+private async Task<UserInfo> MapUser(ApplicationUser user)
 {
+    var roles = await _userManager.GetRolesAsync(user);
+
     return new UserInfo
     {
         Id = user.Id,
-
         Email = user.Email ?? string.Empty,
-
         FirstName = user.FirstName,
-
-        LastName = user.LastName
+        LastName = user.LastName,
+        Roles = roles.ToList()
     };
 }
 

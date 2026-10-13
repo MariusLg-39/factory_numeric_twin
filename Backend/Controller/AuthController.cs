@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjetFullstack.DTO.Auth;
@@ -9,87 +10,156 @@ namespace ProjetFullstack.Controllers;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authService;
+private const string RefreshCookieName = "refreshToken";
+private const string RefreshCookiePath = "/api/auth";
+private readonly IAuthService _authService;
+private readonly IWebHostEnvironment _environment;
 
-    public AuthController(IAuthService authService)
+public AuthController(
+    IAuthService authService,
+    IWebHostEnvironment environment)
+{
+    _authService = authService;
+    _environment = environment;
+}
+
+[HttpPost("register")]
+[Authorize(Roles = "Admin")]
+public async Task<IActionResult> Register(
+    [FromBody] RegisterRequest request)
+{
+    try
     {
-        _authService = authService;
+        var user = await _authService.RegisterAsync(request);
+        return Ok(user);
+    }
+    catch (InvalidOperationException)
+    {
+        return BadRequest(new
+        {
+            message = "Unable to create the account."
+        });
+    }
+}
+
+[HttpPost("login")]
+[AllowAnonymous]
+public async Task<IActionResult> Login(
+    [FromBody] LoginRequest request)
+{
+    try
+    {
+        var response = await _authService.LoginAsync(request);
+
+        SetRefreshTokenCookie(
+            response.RefreshToken,
+            response.RefreshTokenExpiresAt);
+
+        return Ok(response);
+    }
+    catch (UnauthorizedAccessException)
+    {
+        return Unauthorized(new
+        {
+            message = "Invalid credentials."
+        });
+    }
+}
+
+[HttpPost("refresh")]
+[AllowAnonymous]
+public async Task<IActionResult> Refresh()
+{
+    var refreshToken = Request.Cookies[RefreshCookieName];
+
+    if (string.IsNullOrWhiteSpace(refreshToken))
+    {
+        DeleteRefreshTokenCookie();
+
+        return Unauthorized(new
+        {
+            message = "Invalid refresh token."
+        });
     }
 
-    [HttpPost("register")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Register(
-        [FromBody] RegisterRequest request)
+    try
     {
-        try
-        {
-            var response =
-                await _authService.RegisterAsync(request);
+        var response =
+            await _authService.RefreshTokenAsync(refreshToken);
 
-            return Ok(response);
-        }
-        catch (InvalidOperationException)
+        SetRefreshTokenCookie(
+            response.RefreshToken,
+            response.RefreshTokenExpiresAt);
+
+        return Ok(response);
+    }
+    catch (UnauthorizedAccessException)
+    {
+        DeleteRefreshTokenCookie();
+
+        return Unauthorized(new
         {
-            return BadRequest(new
-            {
-                message = "Unable to create the account."
-            });
-        }
+            message = "Invalid refresh token."
+        });
+    }
+}
+
+[HttpPost("revoke")]
+[Authorize]
+public async Task<IActionResult> Revoke()
+{
+    var userIdValue = User.FindFirstValue(
+        ClaimTypes.NameIdentifier);
+
+    if (!Guid.TryParse(userIdValue, out var userId))
+    {
+        DeleteRefreshTokenCookie();
+        return Unauthorized();
     }
 
-    [HttpPost("login")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Login(
-        [FromBody] LoginRequest request)
-    {
-        try
-        {
-            var response =
-                await _authService.LoginAsync(request);
+    var refreshToken = Request.Cookies[RefreshCookieName];
 
-            return Ok(response);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized(new
-            {
-                message = "Invalid credentials."
-            });
-        }
+    if (!string.IsNullOrWhiteSpace(refreshToken))
+    {
+        await _authService.RevokeRefreshTokenAsync(
+            refreshToken,
+            userId);
     }
 
-    [HttpPost("refresh")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Refresh(
-        [FromBody] RefreshTokenRequest request)
-    {
-        try
+    DeleteRefreshTokenCookie();
+
+    return NoContent();
+}
+
+private void SetRefreshTokenCookie(
+    string refreshToken,
+    DateTime expiresAt)
+{
+    Response.Cookies.Append(
+        RefreshCookieName,
+        refreshToken,
+        new CookieOptions
         {
-            var response =
-                await _authService
-                    .RefreshTokenAsync(
-                        request.RefreshToken);
+            HttpOnly = true,
+            Secure = !_environment.IsDevelopment(),
+            SameSite = SameSiteMode.Lax,
+            Expires = new DateTimeOffset(
+                DateTime.SpecifyKind(expiresAt, DateTimeKind.Utc)),
+            Path = RefreshCookiePath,
+            IsEssential = true
+        });
+}
 
-            return Ok(response);
-        }
-        catch (UnauthorizedAccessException)
+private void DeleteRefreshTokenCookie()
+{
+    Response.Cookies.Delete(
+        RefreshCookieName,
+        new CookieOptions
         {
-            return Unauthorized(new
-            {
-                message = "Invalid refresh token."
-            });
-        }
-    }
-
-    [HttpPost("revoke")]
-    [Authorize]
-    public async Task<IActionResult> Revoke(
-        [FromBody] RefreshTokenRequest request)
-    {
-        await _authService
-            .RevokeRefreshTokenAsync(
-                request.RefreshToken);
-
-        return NoContent();
-    }
+            HttpOnly = true,
+            Secure = !_environment.IsDevelopment(),
+            SameSite = SameSiteMode.Lax,
+            Path = RefreshCookiePath
+        });
+}
 }

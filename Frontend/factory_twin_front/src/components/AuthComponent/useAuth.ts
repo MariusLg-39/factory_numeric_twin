@@ -1,11 +1,13 @@
 import { computed, ref } from 'vue'
+import axios from 'axios'
+import api from '../../services/api'
 
 interface AuthUser {
   id: string
   email: string
   firstName: string
   lastName: string
-  roles: string[]
+  roles?: string[]
 }
 
 interface AuthResponse {
@@ -15,16 +17,6 @@ interface AuthResponse {
   refreshTokenExpiresAt: string
   user: AuthUser
 }
-
-const API_URL = 'http://localhost:5298'
-
-const token = ref<string | null>(
-  localStorage.getItem('auth_token')
-)
-
-const user = ref<AuthUser | null>(
-  getStoredUser()
-)
 
 function getStoredUser(): AuthUser | null {
   const storedUser = localStorage.getItem('auth_user')
@@ -40,140 +32,110 @@ function getStoredUser(): AuthUser | null {
   }
 }
 
+const token = ref<string | null>(
+  localStorage.getItem('auth_token'),
+)
+
+const user = ref<AuthUser | null>(getStoredUser())
+
+window.addEventListener('auth:cleared', () => {
+  token.value = null
+  user.value = null
+})
+
+window.addEventListener('auth:updated', ((event: CustomEvent<AuthResponse>) => {
+  token.value = event.detail.accessToken
+  user.value = event.detail.user
+}) as EventListener)
+
+function saveAuth(data: AuthResponse) {
+  token.value = data.accessToken
+  user.value = data.user
+
+  localStorage.setItem('auth_token', data.accessToken)
+  localStorage.setItem('refresh_token', data.refreshToken)
+  localStorage.setItem('auth_user', JSON.stringify(data.user))
+}
+
+function clearAuth() {
+  token.value = null
+  user.value = null
+
+  localStorage.removeItem('auth_token')
+  localStorage.removeItem('refresh_token')
+  localStorage.removeItem('auth_user')
+}
+
+function getErrorMessage(
+  error: unknown,
+  defaultMessage: string,
+): string {
+  if (axios.isAxiosError(error)) {
+    return error.response?.data?.message ?? defaultMessage
+  }
+
+  return error instanceof Error
+    ? error.message
+    : defaultMessage
+}
+
 export function useAuth() {
-  const isAuthenticated = computed(() => {
-    return token.value !== null
-  })
+  const isAuthenticated = computed(() => token.value !== null)
 
   async function login(
     email: string,
-    password: string
+    password: string,
   ): Promise<void> {
-    const response = await fetch(
-      `${API_URL}/api/auth/login`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      }
-    )
+    try {
+      const response = await api.post<AuthResponse>(
+        '/auth/login',
+        { email, password },
+      )
 
-    if (!response.ok) {
-      let message = 'Identifiants incorrects.'
-
-      try {
-        const data = await response.json()
-
-        if (data.message) {
-          message = data.message
-        }
-      } catch {
-        // Réponse non JSON.
+      if (!response.data.accessToken || !response.data.refreshToken) {
+        throw new Error('Le serveur n’a pas retourné les jetons attendus.')
       }
 
-      throw new Error(message)
-    }
-
-    const data =
-      await response.json() as AuthResponse
-
-    if (!data.accessToken) {
+      saveAuth(response.data)
+    } catch (error) {
       throw new Error(
-        'Le serveur n\'a pas retourné de token.'
+        getErrorMessage(error, 'Identifiants incorrects.'),
       )
     }
-
-    token.value = data.accessToken
-    user.value = data.user
-
-    localStorage.setItem(
-      'auth_token',
-      data.accessToken
-    )
-
-    localStorage.setItem(
-      'refresh_token',
-      data.refreshToken
-    )
-
-    localStorage.setItem(
-      'auth_user',
-      JSON.stringify(data.user)
-    )
   }
 
   async function register(
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
   ): Promise<void> {
-    const response = await fetch(
-      `${API_URL}/api/auth/register`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          firstName,
-          lastName
-        })
-      }
-    )
-
-    if (!response.ok) {
-      let message = 'Impossible de créer le compte.'
-
-      try {
-        const data = await response.json()
-
-        if (data.message) {
-          message = data.message
-        }
-      } catch {
-        // Réponse non JSON.
-      }
-
-      throw new Error(message)
+    try {
+      await api.post('/auth/register', {
+        email,
+        password,
+        firstName,
+        lastName,
+      })
+    } catch (error) {
+      throw new Error(
+        getErrorMessage(error, 'Impossible de créer le compte.'),
+      )
     }
-
-    const data =
-      await response.json() as AuthResponse
-
-    token.value = data.accessToken
-    user.value = data.user
-
-    localStorage.setItem(
-      'auth_token',
-      data.accessToken
-    )
-
-    localStorage.setItem(
-      'refresh_token',
-      data.refreshToken
-    )
-
-    localStorage.setItem(
-      'auth_user',
-      JSON.stringify(data.user)
-    )
   }
 
-  function logout() {
-    token.value = null
-    user.value = null
+  async function logout(): Promise<void> {
+    const refreshToken = localStorage.getItem('refresh_token')
 
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('refresh_token')
-    localStorage.removeItem('auth_user')
+    try {
+      if (refreshToken && token.value) {
+        await api.post('/auth/revoke', { refreshToken })
+      }
+    } catch {
+      // La session locale doit être effacée même si la révocation échoue.
+    } finally {
+      clearAuth()
+    }
   }
 
   return {
@@ -182,6 +144,6 @@ export function useAuth() {
     isAuthenticated,
     login,
     register,
-    logout
+    logout,
   }
 }

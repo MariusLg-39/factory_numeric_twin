@@ -18,4 +18,5 @@ public class UserResponse
 
     public DateTime CreatedAt { get; set; }
 
+    public IList<string> Roles { get; set; } = new List<string>();
 }

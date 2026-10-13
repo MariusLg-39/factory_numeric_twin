@@ -4,10 +4,13 @@ namespace ProjetFullstack.Repositories.Interfaces;
 
 public interface IRefreshTokenRepository
 {
-Task<RefreshToken?> GetByHashAsync(string tokenHash);
+    Task<RefreshToken?> GetByHashAsync(string tokenHash);
 
-Task AddAsync(RefreshToken refreshToken);
+    Task AddAsync(RefreshToken refreshToken);
 
-Task UpdateAsync(RefreshToken refreshToken);
+    Task UpdateAsync(RefreshToken refreshToken);
 
+    Task ReplaceAsync(
+        RefreshToken oldToken,
+        RefreshToken newToken);
 }

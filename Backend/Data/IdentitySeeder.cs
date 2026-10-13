@@ -62,10 +62,8 @@ public static class IdentitySeeder
             {
                 UserName = adminEmail,
                 Email = adminEmail,
-
                 FirstName = "Admin",
                 LastName = "System",
-
                 EmailConfirmed = true,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,

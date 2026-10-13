@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Backend.Tests/">
+    <Project Path="Backend.Tests/ProjetFullstack.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Backend/">
+    <Project Path="Backend/ProjetFullstack.csproj" />
+  </Folder>
+</Solution>

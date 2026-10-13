@@ -41,8 +41,9 @@ public class ApplicationDbContext
             entity.Property(u => u.CreatedAt)
                 .IsRequired();
 
+            // Nullable dans le modèle
             entity.Property(u => u.UpdatedAt)
-                .IsRequired();
+                .IsRequired(false);
 
             entity.Property(u => u.IsActive)
                 .IsRequired();
@@ -147,7 +148,7 @@ public class ApplicationDbContext
             entity.Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-                
+
             entity.Property(x => x.Type)
                 .IsRequired()
                 .HasMaxLength(100);

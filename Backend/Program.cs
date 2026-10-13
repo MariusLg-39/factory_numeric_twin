@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 using ProjetFullstack.Authentication;
@@ -14,33 +15,23 @@ using ProjetFullstack.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ============================================================
-// DATABASE
-// ============================================================
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
-// ============================================================
-// IDENTITY
-// ============================================================
-
 builder.Services
     .AddIdentityCore<ApplicationUser>(options =>
     {
         options.User.RequireUniqueEmail = true;
 
-        // Password
         options.Password.RequiredLength = 12;
         options.Password.RequireDigit = true;
         options.Password.RequireLowercase = true;
         options.Password.RequireUppercase = true;
         options.Password.RequireNonAlphanumeric = true;
 
-        // Lockout
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.AllowedForNewUsers = true;
@@ -50,16 +41,28 @@ builder.Services
     .AddDefaultTokenProviders()
     .AddSignInManager();
 
-// ============================================================
-// JWT AUTHENTICATION
-// ============================================================
-
 var jwtSecret = builder.Configuration["Jwt:Secret"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
 
 if (string.IsNullOrWhiteSpace(jwtSecret))
 {
     throw new InvalidOperationException(
         "Jwt:Secret n'est pas configuré."
+    );
+}
+
+if (string.IsNullOrWhiteSpace(jwtIssuer))
+{
+    throw new InvalidOperationException(
+        "Jwt:Issuer n'est pas configuré."
+    );
+}
+
+if (string.IsNullOrWhiteSpace(jwtAudience))
+{
+    throw new InvalidOperationException(
+        "Jwt:Audience n'est pas configuré."
     );
 }
 
@@ -79,31 +82,26 @@ builder.Services
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
+            ValidIssuer = jwtIssuer,
+
             ValidateAudience = true,
+            ValidAudience = jwtAudience,
+
             ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromSeconds(30),
+
             ValidateIssuerSigningKey = true,
-
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-
             IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
 
-            ClockSkew = TimeSpan.FromSeconds(30)
+            NameClaimType = ClaimTypes.Name,
+            RoleClaimType = ClaimTypes.Role
         };
     });
 
 builder.Services.AddAuthorization();
 
-// ============================================================
-// REPOSITORIES
-// ============================================================
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-
-// ============================================================
-// SERVICES
-// ============================================================
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -113,10 +111,6 @@ builder.Services.AddScoped<IMachineService, MachineService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMachineLogService, MachineLogService>();
 
-// ============================================================
-// CORS
-// ============================================================
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
@@ -124,13 +118,10 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
-
-// ============================================================
-// CONTROLLERS
-// ============================================================
 
 builder.Services.AddControllers();
 
@@ -156,17 +147,13 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-
     await IdentitySeeder.SeedAsync(services);
 }
-
-// ============================================================
-// HTTP PIPELINE
-// ============================================================
 
 app.UseHttpsRedirection();
 
 app.UseCors("Frontend");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
