@@ -4,3 +4,7 @@
 /Backend/obj
 /Backend/Properties/
 /Frontend/factory_twin_front/.env
+**/bin/
+**/obj/
+node_modules/
+.env
