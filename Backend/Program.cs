@@ -109,6 +109,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IProductionLineService, ProductionLineService>();
+builder.Services.AddScoped<IMachineService, MachineService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IMachineLogService, MachineLogService>();
 
 // ============================================================
 // CORS
