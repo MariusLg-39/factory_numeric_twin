@@ -8,3 +8,5 @@
 **/obj/
 node_modules/
 .env
+/Backend/bin/
+/Backend/obj/
