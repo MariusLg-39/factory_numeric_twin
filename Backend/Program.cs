@@ -110,6 +110,8 @@ builder.Services.AddScoped<IProductionLineService, ProductionLineService>();
 builder.Services.AddScoped<IMachineService, MachineService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMachineLogService, MachineLogService>();
+builder.Services.AddScoped<IMachineModelService, MachineModelService>();
+builder.Services.AddSingleton<IModel3DStorage, Model3DStorage>();
 
 builder.Services.AddCors(options =>
 {

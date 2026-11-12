@@ -245,28 +245,43 @@ namespace ProjetFullstack.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("MachineModelId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<double>("PositionX")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("PositionY")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("PositionZ")
+                        .HasColumnType("double precision");
+
                     b.Property<Guid>("ProductionLineId")
                         .HasColumnType("uuid");
+
+                    b.Property<double>("RotationY")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Scale")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MachineModelId");
 
                     b.HasIndex("ProductionLineId");
 
@@ -285,11 +300,16 @@ namespace ProjetFullstack.Migrations
                     b.Property<Guid>("MachineId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("MaxValue")
-                        .HasColumnType("integer");
+                    b.Property<double>("MaxValue")
+                        .HasColumnType("double precision");
 
-                    b.Property<int>("MinValue")
-                        .HasColumnType("integer");
+                    b.Property<double>("MinValue")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Unit")
                         .IsRequired()
@@ -299,8 +319,8 @@ namespace ProjetFullstack.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("integer");
+                    b.Property<double>("Value")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -336,6 +356,84 @@ namespace ProjetFullstack.Migrations
                     b.HasIndex("MachineId");
 
                     b.ToTable("MachineLog");
+                });
+
+            modelBuilder.Entity("ProjetFullstack.Models.MachineModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Model3DFileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Model3DPath")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MachineModel");
+                });
+
+            modelBuilder.Entity("ProjetFullstack.Models.MachineModelConfiguration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MachineModelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("MaxValue")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("MinValue")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MachineModelId");
+
+                    b.ToTable("MachineModelConfiguration");
                 });
 
             modelBuilder.Entity("ProjetFullstack.Models.Measure", b =>
@@ -533,11 +631,19 @@ namespace ProjetFullstack.Migrations
 
             modelBuilder.Entity("ProjetFullstack.Models.Machine", b =>
                 {
+                    b.HasOne("ProjetFullstack.Models.MachineModel", "MachineModel")
+                        .WithMany("Machines")
+                        .HasForeignKey("MachineModelId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("ProjetFullstack.Models.ProductionLine", "ProductionLine")
                         .WithMany("Machines")
                         .HasForeignKey("ProductionLineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("MachineModel");
 
                     b.Navigation("ProductionLine");
                 });
@@ -562,6 +668,17 @@ namespace ProjetFullstack.Migrations
                         .IsRequired();
 
                     b.Navigation("Machine");
+                });
+
+            modelBuilder.Entity("ProjetFullstack.Models.MachineModelConfiguration", b =>
+                {
+                    b.HasOne("ProjetFullstack.Models.MachineModel", "MachineModel")
+                        .WithMany("DefaultConfigurations")
+                        .HasForeignKey("MachineModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MachineModel");
                 });
 
             modelBuilder.Entity("ProjetFullstack.Models.Measure", b =>
@@ -620,6 +737,13 @@ namespace ProjetFullstack.Migrations
                     b.Navigation("MachineLogs");
 
                     b.Navigation("Sensors");
+                });
+
+            modelBuilder.Entity("ProjetFullstack.Models.MachineModel", b =>
+                {
+                    b.Navigation("DefaultConfigurations");
+
+                    b.Navigation("Machines");
                 });
 
             modelBuilder.Entity("ProjetFullstack.Models.ProductionLine", b =>
