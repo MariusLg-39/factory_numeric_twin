@@ -9,4 +9,7 @@ public interface IProductionLineService
     Task<ProductionLine> CreateAsync(ProductionLine line);
     Task<bool> UpdateAsync(Guid id, ProductionLine line);
     Task<bool> DeleteAsync(Guid id);
+
+    // Nombre de machines par ligne
+    Task<Dictionary<Guid, int>> CountMachinesAsync();
 }
