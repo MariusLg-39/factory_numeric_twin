@@ -57,6 +57,14 @@ public class ProductionLineService : IProductionLineService
         return true;
     }
 
+    public async Task<Dictionary<Guid, int>> CountMachinesAsync()
+    {
+        return await _context.Set<Machine>()
+            .GroupBy(m => m.ProductionLineId)
+            .Select(g => new { g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.Key, x => x.Count);
+    }
+
     public async Task<bool> DeleteAsync(Guid id)
     {
         var existing = await _context.Set<ProductionLine>()

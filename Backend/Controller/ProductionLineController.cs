@@ -20,7 +20,8 @@ public class ProductionLinesController : ControllerBase
     public async Task<ActionResult<IEnumerable<ProductionLineResponse>>> GetAll()
     {
         var lines = await _service.GetAllAsync();
-        return Ok(lines.Select(ToResponse));
+        var counts = await _service.CountMachinesAsync();
+        return Ok(lines.Select(line => ToResponse(line, counts.GetValueOrDefault(line.Id))));
     }
 
     [HttpGet("{id:guid}")]
@@ -31,7 +32,8 @@ public class ProductionLinesController : ControllerBase
         if (line is null)
             return NotFound();
 
-        return Ok(ToResponse(line));
+        var counts = await _service.CountMachinesAsync();
+        return Ok(ToResponse(line, counts.GetValueOrDefault(id)));
     }
 
     [HttpPost]
@@ -82,13 +84,16 @@ public class ProductionLinesController : ControllerBase
         return NoContent();
     }
 
-    private static ProductionLineResponse ToResponse(ProductionLine line)
+    private static ProductionLineResponse ToResponse(ProductionLine line) => ToResponse(line, 0);
+
+    private static ProductionLineResponse ToResponse(ProductionLine line, int machineCount)
     {
         return new ProductionLineResponse
         {
             Id = line.Id,
             Name = line.Name,
             Description = line.Description,
+            MachineCount = machineCount,
             CreatedAt = line.CreatedAt,
             UpdatedAt = line.UpdatedAt
         };
