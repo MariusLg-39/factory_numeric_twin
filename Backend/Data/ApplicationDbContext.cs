@@ -149,13 +149,23 @@ public class ApplicationDbContext
                 .IsRequired()
                 .HasMaxLength(100);
 
-            entity.Property(x => x.Type)
-                .IsRequired()
-                .HasMaxLength(100);
-
             entity.Property(x => x.Status)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            // Placement dans le jumeau 3D
+            entity.Property(x => x.PositionX).IsRequired();
+            entity.Property(x => x.PositionY).IsRequired();
+            entity.Property(x => x.PositionZ).IsRequired();
+            entity.Property(x => x.RotationY).IsRequired();
+            entity.Property(x => x.Scale).IsRequired();
+
+            // Relation :
+            // MachineModel 1 ---- 0..* Machine (suppression du modèle interdite s'il est utilisé)
+            entity.HasOne(m => m.MachineModel)
+                .WithMany(mm => mm.Machines)
+                .HasForeignKey(m => m.MachineModelId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(x => x.CreatedAt)
                 .IsRequired();
@@ -172,6 +182,63 @@ public class ApplicationDbContext
             entity.HasOne(m => m.ProductionLine)
                 .WithMany(pl => pl.Machines)
                 .HasForeignKey(m => m.ProductionLineId);
+        });
+
+        // ============================================================
+        // MACHINE MODEL (catalogue)
+        // ============================================================
+
+        builder.Entity<MachineModel>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Type)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Description)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.Property(x => x.Model3DPath)
+                .HasMaxLength(255);
+
+            entity.Property(x => x.Model3DFileName)
+                .HasMaxLength(255);
+
+            entity.Property(x => x.CreatedAt)
+                .IsRequired();
+
+            entity.Property(x => x.UpdatedAt)
+                .IsRequired();
+        });
+
+        // ============================================================
+        // MACHINE MODEL CONFIGURATION (configurations par défaut)
+        // ============================================================
+
+        builder.Entity<MachineModelConfiguration>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Unit)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            // Relation :
+            // MachineModel 1 ---- 0..* MachineModelConfiguration
+            entity.HasOne(c => c.MachineModel)
+                .WithMany(m => m.DefaultConfigurations)
+                .HasForeignKey(c => c.MachineModelId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ============================================================
@@ -213,6 +280,10 @@ public class ApplicationDbContext
         {
             // Primary Key
             entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
 
             entity.Property(x => x.Value)
                 .IsRequired();
