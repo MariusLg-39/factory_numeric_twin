@@ -110,6 +110,7 @@ builder.Services.AddScoped<IProductionLineService, ProductionLineService>();
 builder.Services.AddScoped<IMachineService, MachineService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMachineLogService, MachineLogService>();
+builder.Services.AddScoped<IMachineConfigurationService, MachineConfigurationService>();
 builder.Services.AddScoped<IMachineModelService, MachineModelService>();
 builder.Services.AddSingleton<IModel3DStorage, Model3DStorage>();
 
@@ -127,9 +128,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
-// ============================================================
 // APPLICATION
-// ============================================================
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -142,9 +141,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// ============================================================
 // DATABASE SEEDER
-// ============================================================
 
 using (var scope = app.Services.CreateScope())
 {
