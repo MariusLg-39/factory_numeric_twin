@@ -1,0 +1,88 @@
+.config-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.muted {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.config-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.config-name {
+  color: #0f172a;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.config-actions {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.config-value {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.range {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.config-details,
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.config-details {
+  padding-top: 0.6rem;
+  border-top: 1px dashed #e2e8f0;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.6rem;
+}
+
+.config-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.add-button {
+  align-self: flex-start;
+}
