@@ -18,6 +18,7 @@ const allNavItems: SidebarNavItem[] = [
 { key: 'home', label: 'Dashboard', icon: 'pi pi-home', routeName: 'home' },
 { key: 'lines', label: 'Lignes', icon: 'pi pi-sitemap', routeName: 'production-lines' },
 { key: 'products', label: 'Produits', icon: 'pi pi-box', routeName: 'products' },
+{ key: 'catalog', label: 'Catalogue', icon: 'pi pi-book', routeName: 'catalog' },
 { key: 'machines', label: 'Machines', icon: 'pi pi-cog', routeName: 'machines' },
 { key: 'users', label: 'Utilisateurs', icon: 'pi pi-users', routeName: 'users' }
 ]

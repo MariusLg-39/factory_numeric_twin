@@ -11,6 +11,7 @@ import ProductionLineComponent from '@/components/ProductionLineComponent/Produc
 import MainLayoutComponent from '@/components/MainLayoutComponent/MainLayoutComponent.vue'
 import ProductComponent from '@/components/ProductComponent/ProductComponent.vue'
 import MachineComponent from '@/components/MachineComponent/MachineComponent.vue'
+import CatalogComponent from '@/components/CatalogComponent/CatalogComponent.vue'
 import UserComponent from '@/components/UserComponent/UserComponent.vue'
 import SettingsComponent from '@/components/SettingsComponent/SettingsComponent.vue'
 
@@ -56,6 +57,15 @@ const router = createRouter({
           meta: {
             title: 'Produits',
             subtitle: 'Gérez vos produits'
+          }
+        },
+        {
+          path: 'catalogue',
+          name: 'catalog',
+          component: CatalogComponent,
+          meta: {
+            title: 'Catalogue de machines',
+            subtitle: 'Modèles 3D et configurations par défaut'
           }
         },
         {
