@@ -140,11 +140,11 @@ export function useCatalogPage() {
 
     previewLoading.value = true
     try {
-      const thumbnailsModule = await import('@/models3d/thumbnails')
+      const thumbnailsModule = await import('@/models3D/thumbnails')
       let url: string
 
       if (modelMode.value === 'generate') {
-        const { previewThumbnail } = await import('@/models3d/generate')
+        const { previewThumbnail } = await import('@/models3D/generate')
         url = await previewThumbnail(generateKind.value, { ...generateParams })
       } else if (modelMode.value === 'upload') {
         url = await thumbnailsModule.renderThumbnail(await modelFile.value!.arrayBuffer())
@@ -226,7 +226,7 @@ export function useCatalogPage() {
     const pending = list.filter((m) => m.hasModel3D)
     if (pending.length === 0) return
 
-    const { cachedThumbnail } = await import('@/models3d/thumbnails')
+    const { cachedThumbnail } = await import('@/models3D/thumbnails')
     for (const model of pending) {
       cachedThumbnail(thumbnailKey(model), () => downloadModel3D(model.id))
         .then((url) => (thumbnails.value[model.id] = url))
@@ -318,7 +318,7 @@ export function useCatalogPage() {
       if (modelMode.value === 'upload' && modelFile.value) {
         await uploadModel3D(model.id, modelFile.value)
       } else if (modelMode.value === 'generate') {
-        const { generateModelFile } = await import('@/models3d/generate')
+        const { generateModelFile } = await import('@/models3D/generate')
         await uploadModel3D(model.id, await generateModelFile(generateKind.value, { ...generateParams }))
       } else if (modelMode.value === 'none' && wasEditing?.hasModel3D) {
         await deleteModel3D(model.id)
